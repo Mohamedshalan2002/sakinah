@@ -1,0 +1,32 @@
+{
+  "name": "سَكِينَة — مصحف وأذكار ومواقيت",
+  "short_name": "سَكِينَة",
+  "description": "تطبيق إسلامي بلا إعلانات ولا تتبّع: مصحف كامل أوفلاين، أذكار وأدعية بمصادرها، مواقيت صلاة وقبلة، وِرد واستمرارية، وأسماء الله الحسنى.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d1b2a",
+  "theme_color": "#0d1b2a",
+  "categories": ["lifestyle", "education", "books"],
+  "prefer_related_applications": false,
+  "icons": [
+    { "src": "assets/icons/icon-96.png",  "sizes": "96x96",   "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-152.png", "sizes": "152x152", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-167.png", "sizes": "167x167", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-256.png", "sizes": "256x256", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-384.png", "sizes": "384x384", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "المصحف",  "short_name": "المصحف",  "url": "./index.html#quran" },
+    { "name": "الأذكار", "short_name": "الأذكار", "url": "./index.html#azkar" },
+    { "name": "السبحة",  "short_name": "السبحة",  "url": "./index.html#tasbih" },
+    { "name": "المواقيت", "short_name": "المواقيت", "url": "./index.html#prayer" }
+  ]
+}

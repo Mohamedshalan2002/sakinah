@@ -1,0 +1,92 @@
+# ─────────────────────────────────────────────────────────────────────
+# سَكِينَة — تبعيات مشروع Flutter
+#
+# جميع الإصدارات تم التحقق من وجودها على pub.dev قبل كتابتها هنا
+# (لا إصدارات مُخترعة). إذا فشل التوافق، شغّل: flutter pub upgrade
+#
+# للتشغيل:
+#   flutter pub get
+#   flutter run
+# لبناء APK:
+#   flutter build apk --release
+# ─────────────────────────────────────────────────────────────────────
+name: sakinah
+description: "سَكِينَة — مصحف وأذكار ومواقيت وقبلة، بلا إعلانات وبلا تتبّع."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # ── حسابات المواقيت والقبلة ──
+  # adhan: تنفيذ حساب فلكي معياري، وهو نفس ما تحققنا منه رقميًا في نسخة الويب.
+  adhan: ^2.0.0
+
+  # ── التاريخ الهجري ──
+  hijri: ^3.0.1
+
+  # ── التخزين المحلي (بلا خادم) ──
+  shared_preferences: ^2.5.5
+  sqflite: ^2.4.4
+  path: ^1.9.1
+  path_provider: ^2.1.6
+
+  # ── الموقع والبوصلة ──
+  geolocator: ^14.1.1
+  flutter_compass: ^0.8.1
+
+  # ── التنبيهات (الأذان والأذكار) ──
+  flutter_local_notifications: ^22.3.1
+  timezone: ^0.11.1
+
+  # ── الصوت (تنزيل عند الطلب من مصدر يحدده المستخدم) ──
+  just_audio: ^0.10.6
+  audio_session: ^0.2.4
+  http: ^1.2.2
+  crypto: ^3.0.7
+
+  # ── الواجهة ──
+  flutter_riverpod: ^3.4.3  go_router: ^18.0.2
+  flutter_svg: ^2.3.0
+  intl: ^0.20.3
+  permission_handler: ^13.0.2
+  share_plus: ^13.3.0
+  url_launcher: ^6.3.2
+
+  # ملاحظة: لا نستخدم google_fonts لأنها تُحمّل الخطوط من الإنترنت.
+  # كل الخطوط مُضمّنة محليًا (Amiri / Cairo / Noto Naskh) وفاءً بوعد
+  # «لا طلبات خارجية» ولعمل التطبيق أوفلاين من أول تشغيل.
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/data/
+    - assets/fonts/
+
+  fonts:
+    - family: Amiri
+      fonts:
+        - asset: assets/fonts/Amiri-Regular.ttf
+        - asset: assets/fonts/Amiri-Bold.ttf
+          weight: 700
+    - family: AmiriQuran
+      fonts:
+        - asset: assets/fonts/AmiriQuran.ttf
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo.ttf
+    - family: NotoNaskh
+      fonts:
+        - asset: assets/fonts/NotoNaskhArabic.ttf

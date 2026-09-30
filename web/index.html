@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>سَكِينَة — مصحف وأذكار ومواقيت</title>
+<meta name="description" content="تطبيق إسلامي بلا إعلانات ولا تتبّع: مصحف كامل أوفلاين، أذكار وأدعية بمصادرها، مواقيت صلاة وقبلة، وِرد واستمرارية، وأسماء الله الحسنى.">
+<meta name="theme-color" content="#0d1b2a">
+<meta name="color-scheme" content="dark light">
+
+<!-- لا تتبّع، لا تحليلات، لا شبكات إعلانية -->
+<meta name="robots" content="index, follow">
+<meta name="referrer" content="no-referrer">
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="assets/icons/favicon.png">
+<link rel="apple-touch-icon" href="assets/icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="سَكِينَة">
+<meta name="mobile-web-app-capable" content="yes">
+
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<noscript>
+  <div style="padding:32px;text-align:center;font-family:'Cairo',sans-serif;color:#f7f3ea;background:#0d1b2a;min-height:100vh">
+    <h1 style="color:#c6a265;font-family:'Amiri',serif">سَكِينَة</h1>
+    <p style="line-height:2">هذا التطبيق يعمل بالكامل على جهازك ويحتاج تشغيل JavaScript في المتصفح.<br>
+    لا إعلانات ولا تتبّع — كل شيء محلي.</p>
+  </div>
+</noscript>
+
+<div class="app-shell" id="app">
+  <div class="loading" style="min-height:100vh">
+    <div class="spinner"></div>
+    <span style="color:var(--text-muted)">جارٍ تجهيز «سَكِينَة»…</span>
+  </div>
+</div>
+
+<!-- الترتيب مهم: النواة أولًا ثم الوحدات، وبعدها التهيئة -->
+<script src="js/store.js"></script>
+<script src="js/icons.js"></script>
+<script src="js/prayer.js"></script>
+<script src="js/core.js"></script>
+<script src="js/quran.js"></script>
+<script src="js/azkar.js"></script>
+<script src="js/rituals.js"></script>
+<script src="js/screens.js"></script>
+<script src="js/boot.js"></script>
+</body>
+</html>

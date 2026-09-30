@@ -1,0 +1,269 @@
+{
+ "methods": {
+  "MWL": {
+   "nameAr": "رابطة العالم الإسلامي",
+   "fajr": 18.0,
+   "isha": 17.0,
+   "maghribMinutes": 0,
+   "asr": 1
+  },
+  "EGYPT": {
+   "nameAr": "الهيئة المصرية العامة للمساحة",
+   "fajr": 19.5,
+   "isha": 17.5,
+   "maghribMinutes": 0,
+   "asr": 1
+  },
+  "KARACHI": {
+   "nameAr": "جامعة العلوم الإسلامية — كراتشي",
+   "fajr": 18.0,
+   "isha": 18.0,
+   "maghribMinutes": 0,
+   "asr": 1
+  },
+  "UMM_AL_QURA": {
+   "nameAr": "أم القرى — مكة المكرمة",
+   "fajr": 18.5,
+   "ishaMinutes": 90,
+   "maghribMinutes": 0,
+   "asr": 1
+  },
+  "GULF": {
+   "nameAr": "المنطقة الخليجية",
+   "fajr": 19.5,
+   "ishaMinutes": 90,
+   "maghribMinutes": 0,
+   "asr": 1
+  },
+  "QATAR": {
+   "nameAr": "قطر",
+   "fajr": 18.0,
+   "ishaMinutes": 90,
+   "maghribMinutes": 0,
+   "asr": 1
+  },
+  "KUWAIT": {
+   "nameAr": "الكويت",
+   "fajr": 18.0,
+   "isha": 17.5,
+   "maghribMinutes": 0,
+   "asr": 1
+  },
+  "SINGAPORE": {
+   "nameAr": "سنغافورة (مجلس سنغافورة الإسلامي)",
+   "fajr": 20.0,
+   "isha": 18.0,
+   "maghribMinutes": 0,
+   "asr": 1
+  },
+  "JAKIM": {
+   "nameAr": "ماليزيا (جاكيم)",
+   "fajr": 20.0,
+   "isha": 18.0,
+   "maghribMinutes": 0,
+   "asr": 1
+  },
+  "KEMENAG": {
+   "nameAr": "إندونيسيا (وزارة الأديان)",
+   "fajr": 20.0,
+   "isha": 18.0,
+   "maghribMinutes": 0,
+   "asr": 1
+  },
+  "MOROCCO": {
+   "nameAr": "المغرب",
+   "fajr": 19.0,
+   "isha": 17.0,
+   "maghribMinutes": 0,
+   "asr": 1
+  },
+  "TUNISIA": {
+   "nameAr": "تونس",
+   "fajr": 18.0,
+   "isha": 18.0,
+   "maghribMinutes": 0,
+   "asr": 1
+  },
+  "ALGERIA": {
+   "nameAr": "الجزائر",
+   "fajr": 18.0,
+   "isha": 17.0,
+   "maghribMinutes": 0,
+   "asr": 1
+  },
+  "JORDAN": {
+   "nameAr": "الأردن (وزارة الأوقاف)",
+   "fajr": 18.0,
+   "isha": 18.0,
+   "maghribMinutes": 5,
+   "asr": 1
+  },
+  "FRANCE": {
+   "nameAr": "فرنسا (اتحاد المنظمات الإسلامية)",
+   "fajr": 12.0,
+   "isha": 12.0,
+   "maghribMinutes": 0,
+   "asr": 1
+  },
+  "RUSSIA": {
+   "nameAr": "روسيا (الإدارة الدينية)",
+   "fajr": 16.0,
+   "isha": 15.0,
+   "maghribMinutes": 0,
+   "asr": 1
+  },
+  "TURKEY": {
+   "nameAr": "رئاسة الشؤون الدينية التركية",
+   "fajr": 18.0,
+   "isha": 17.0,
+   "maghribMinutes": 0,
+   "asr": 1
+  },
+  "NORTH_AMERICA": {
+   "nameAr": "الجمعية الإسلامية لأمريكا الشمالية",
+   "fajr": 15.0,
+   "isha": 15.0,
+   "maghribMinutes": 0,
+   "asr": 1
+  },
+  "DUBAI": {
+   "nameAr": "الإمارات — دبي",
+   "fajr": 18.2,
+   "isha": 18.2,
+   "maghribMinutes": 3,
+   "asr": 1
+  }
+ },
+ "cities": [
+  {
+   "id": "makkah",
+   "nameAr": "مكة المكرمة",
+   "lat": 21.4225,
+   "lon": 39.8262,
+   "tz": 3,
+   "qibla": {
+    "bearing": 268.66,
+    "distanceKm": 0.1,
+    "kaaba": {
+     "latitude": 21.4224779,
+     "longitude": 39.8251832
+    }
+   },
+   "sample": {
+    "imsak": "04:58",
+    "fajr": "04:58",
+    "sunrise": "06:12",
+    "dhuhr": "12:11",
+    "asr": "15:34",
+    "sunset": "18:10",
+    "maghrib": "18:10",
+    "isha": "19:19",
+    "midnight": "23:34"
+   }
+  },
+  {
+   "id": "madinah",
+   "nameAr": "المدينة المنورة",
+   "lat": 24.4686,
+   "lon": 39.6142,
+   "tz": 3,
+   "qibla": {
+    "bearing": 176.31,
+    "distanceKm": 339.4,
+    "kaaba": {
+     "latitude": 21.4224779,
+     "longitude": 39.8251832
+    }
+   },
+   "sample": {
+    "imsak": "04:58",
+    "fajr": "04:58",
+    "sunrise": "06:13",
+    "dhuhr": "12:12",
+    "asr": "15:36",
+    "sunset": "18:10",
+    "maghrib": "18:10",
+    "isha": "19:21",
+    "midnight": "23:34"
+   }
+  },
+  {
+   "id": "cairo",
+   "nameAr": "القاهرة",
+   "lat": 30.0444,
+   "lon": 31.2357,
+   "tz": 2,
+   "qibla": {
+    "bearing": 136.14,
+    "distanceKm": 1287.2,
+    "kaaba": {
+     "latitude": 21.4224779,
+     "longitude": 39.8251832
+    }
+   },
+   "sample": {
+    "imsak": "04:28",
+    "fajr": "04:28",
+    "sunrise": "05:48",
+    "dhuhr": "11:45",
+    "asr": "15:09",
+    "sunset": "17:42",
+    "maghrib": "17:42",
+    "isha": "18:57",
+    "midnight": "23:06"
+   }
+  },
+  {
+   "id": "riyadh",
+   "nameAr": "الرياض",
+   "lat": 24.7136,
+   "lon": 46.6753,
+   "tz": 3,
+   "qibla": {
+    "bearing": 243.8,
+    "distanceKm": 790.4,
+    "kaaba": {
+     "latitude": 21.4224779,
+     "longitude": 39.8251832
+    }
+   },
+   "sample": {
+    "imsak": "04:29",
+    "fajr": "04:29",
+    "sunrise": "05:45",
+    "dhuhr": "11:43",
+    "asr": "15:08",
+    "sunset": "17:42",
+    "maghrib": "17:42",
+    "isha": "18:53",
+    "midnight": "23:06"
+   }
+  },
+  {
+   "id": "istanbul",
+   "nameAr": "إستانبول",
+   "lat": 41.0082,
+   "lon": 28.9784,
+   "tz": 3,
+   "qibla": {
+    "bearing": 151.62,
+    "distanceKm": 2405.0,
+    "kaaba": {
+     "latitude": 21.4224779,
+     "longitude": 39.8251832
+    }
+   },
+   "sample": {
+    "imsak": "05:28",
+    "fajr": "05:28",
+    "sunrise": "07:00",
+    "dhuhr": "12:54",
+    "asr": "16:13",
+    "sunset": "18:48",
+    "maghrib": "18:48",
+    "isha": "20:14",
+    "midnight": "00:09"
+   }
+  }
+ ]
+}

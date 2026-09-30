@@ -1,0 +1,21 @@
+# سجلّات التشغيل والأدوات المحلية
+.zwork/
+
+# Node (اختبارات jsdom المحلية)
+node_modules/
+package-lock.json
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Dart / Flutter
+dart_tool/
+build/
+.flutter-plugins*
+.idea/
+
+# ملفات النظام
+Thumbs.db
+.DS_Store
