@@ -73,7 +73,7 @@ async function main() {
 
   // ── تحميل سكربتات التطبيق بالترتيب نفسه المذكور في index.html ──
   const scripts = [
-    'js/store.js', 'js/icons.js', 'js/prayer.js', 'js/core.js',
+    'js/store.js', 'js/icons.js', 'js/prayer.js', 'js/hijri.js', 'js/core.js',
     'js/quran.js', 'js/azkar.js', 'js/rituals.js', 'js/screens.js', 'js/boot.js',
   ];
 
@@ -148,6 +148,59 @@ async function main() {
       'نص السورة موجود');
   } catch (e) {
     check('فتح سورة', false, e.message);
+  }
+
+  // ── 5-ب) التاريخ الهجري وتذكير الصيام في الرئيسية ──
+  try {
+    check('جدول أم القرى محمّل',
+      App.hijriReady === true && win.Hijri._state.loaded === true,
+      'hijriReady=' + App.hijriReady);
+
+    win.Core.navigate('home', {}, false);
+    await new Promise((r) => setTimeout(r, 250));
+    const home = $('#main');
+    const homeText = home.textContent;
+
+    check('الرئيسية تعرض التاريخ الهجري في عنصر مخصص',
+      !!$('.hijri-date'), $('.hijri-date') ? $('.hijri-date').textContent.trim() : 'مفقود');
+    check('التاريخ الهجري يتضمن السنة وكلمة هـ',
+      ($('.hijri-date') || { textContent: '' }).textContent.includes('هـ'),
+      'الصيغة الكاملة');
+    check('قسم أيام البيض معروض',
+      !!$('.fast-section') && home.querySelector('.fast-section').textContent.includes('أيام البيض'),
+      $('.fast-section') ? $('.fast-section').textContent.trim() : 'مفقود');
+    check('قائمة أيام البيض تعرض ٣ أيام على الأقل',
+      home.querySelectorAll('.fast-row').length >= 3,
+      home.querySelectorAll('.fast-row').length + ' صفًا');
+    check('بطاقة «أيام الصيام القادمة» ظهرت',
+      homeText.includes('أيام الصيام القادمة'), 'موجودة');
+    check('التذكير يذكر أيام البيض', homeText.includes('أيام البيض'), 'مذكورة');
+
+    const hNow = win.Hijri.toHijri(new Date());
+    check('التاريخ الهجري لليوم محسوب', !!hNow,
+      hNow ? `${hNow.day} ${hNow.monthName} ${hNow.year}` : 'null');
+    check('التاريخ الهجري داخل نطاق الجدول',
+      hNow && hNow.year >= 1408 && hNow.year <= 1478, hNow ? 'السنة ' + hNow.year : 'خارج');
+
+    // تسلسل الأشهر: أول الشهر = آخر يوم من السابق + 1
+    const pm = hNow.month === 1 ? 12 : hNow.month - 1;
+    const py = hNow.month === 1 ? hNow.year - 1 : hNow.year;
+    const lastPrev = win.Hijri.toGregorian(py, pm, win.Hijri.daysInHijriMonth(py, pm));
+    const firstCur = win.Hijri.toGregorian(hNow.year, hNow.month, 1);
+    const gap = Math.round((firstCur - lastPrev) / 86400000);
+    check('تسلسل الأشهر الهجرية متصل', gap === 1, `فرق = ${gap} يوم`);
+
+    // منطق الإثنين/الخميس
+    const mon = new Date(2026, 8, 28);
+    const thu = new Date(2026, 9, 1);
+    check('الإثنين يُكبر كيوم صيام',
+      win.Hijri.fastingInfo(mon).reasons.some((r) => r.key === 'monday'),
+      win.Hijri.weekdayName(mon));
+    check('الخميس يُعرف كيوم صيام',
+      win.Hijri.fastingInfo(thu).reasons.some((r) => r.key === 'thursday'),
+      win.Hijri.weekdayName(thu));
+  } catch (e) {
+    check('التاريخ الهجري في الرئيسية', false, e.message);
   }
 
   // ── 6) الأذكار: ظهور مرجع لكل ذكر ──

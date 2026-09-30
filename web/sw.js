@@ -18,6 +18,7 @@ const SHELL_ASSETS = [
   'js/store.js',
   'js/icons.js',
   'js/prayer.js',
+  'js/hijri.js',
   'js/core.js',
   'js/quran.js',
   'js/azkar.js',
@@ -34,6 +35,7 @@ const DATA_ASSETS = [
   'data/names/names99.json',
   'data/names/situations.json',
   'data/cities.json',
+  'data/hijri.json',
 ];
 
 /* الخطوط: تُخزَّن عند أول استخدام */

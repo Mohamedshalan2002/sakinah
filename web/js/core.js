@@ -245,6 +245,150 @@
     }
   }
 
+  /*
+   * بطاقة التاريخ الهجري وحالة الصيام لليوم.
+   * تعتمد على جدول أم القرى المحلي — لا تحتاج إنترنت.
+   */
+  function hijriTodayCard(now) {
+    if (!window.Hijri || !window.Hijri._state.loaded) return null;
+
+    var h = window.Hijri.toHijri(now);
+    if (!h) return null;
+    var info = window.Hijri.fastingInfo(now);
+    var ram = window.Hijri.ramadanStatus(now);
+
+    var card = el('div', 'card');
+    var html = '<div class="card-title">' + Icons.icon('calendarHeart') +
+      'التاريخ الهجري</div>';
+
+    // التاريخ نصًّا واضحًا (كان الرقم يضيع بصريًا داخل عنوان البطاقة)
+    html += '<div class="hijri-date">' + arabicNum(h.day) + ' ' +
+      esc(h.monthName) + ' ' + arabicNum(h.year) + ' هـ</div>';
+
+    html += '<div class="ref-line" style="margin-top:4px">' +
+      esc(window.Hijri.weekdayName(now)) + ' · اليوم ' + arabicNum(h.day) +
+      ' من ' + esc(h.monthName) + ' (' + arabicNum(h.monthLength) + ' يومًا)' +
+      ' · شهر ' + arabicNum(h.month) + ' من ١٢</div>';
+
+    if (ram && ram.inRamadan) {
+      html += '<div class="badge badge-verified" style="margin-top:10px">' +
+        Icons.icon('moonStar') + 'اليوم ' + arabicNum(ram.dayOfRamadan) + ' من رَمَضان</div>';
+    }
+
+    // حالة الصيام اليوم
+    if (info && info.isFastingDay) {
+      var chips = info.reasons.map(function (r) {
+        var isRmd = r.key === 'ramadan';
+        return '<span class="badge ' + (isRmd ? 'badge-verified' : 'badge-gold') + '">' +
+          Icons.icon('moonStar') + esc(r.titleAr) + '</span>';
+      }).join(' ');
+      html += '<div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">' + chips + '</div>';
+      html += '<div class="ref-line" style="margin-top:8px">' +
+        esc(info.reasons[0].detailAr) + '</div>';
+    } else {
+      html += '<div class="ref-line" style="margin-top:10px">لا يوم صيام مسنون اليوم.</div>';
+    }
+
+    card.innerHTML = html;
+    return card;
+  }
+
+  /*
+   * بطاقة تذكير بأيام الصيام القادمة.
+   *
+   * مهم: نافذة زمنية قصيرة (أسبوع مثلًا) تُخفي أيام البيض لأنها تأتي في
+   * منتصف الشهر الهجري فقط. لذلك نجمع نوعين من التذكير:
+   *   ١) الأيام الأسبوعية القادمة (الإثنين/الخميس) — أقرب ٤ أيام.
+   *   ٢) أيام البيض القادمة تحديدًا (١٣–١٥) — حتى لو بعد شهر كامل.
+   * كان هذا نقصًا حقيقيًا في العرض: الحساب كان صحيحًا لكن القائمة لا
+   * تُظهر أيام البيض إطلاقًا في معظم أيام الشهر.
+   */
+  function fastingUpcomingCard(now) {
+    if (!window.Hijri || !window.Hijri._state.loaded) return null;
+
+    var weekly = window.Hijri.upcomingFastingDays(now, 4).filter(function (u) {
+      // نستبعد أي يوم بيض من القائمة الأسبوعية لتفادي التكرار
+      return !u.reasons.some(function (r) { return r.key === 'white'; });
+    });
+
+    // أيام البيض القادمة (نبحث حتى ٧٠ يومًا لتغطية الشهر القادم)
+    var whiteUpcoming = [];
+    for (var i = 0; i < 70 && whiteUpcoming.length < 3; i++) {
+      var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
+      var info = window.Hijri.fastingInfo(d);
+      if (!info) break;
+      var isWhite = info.reasons.some(function (r) { return r.key === 'white'; });
+      if (isWhite) {
+        whiteUpcoming.push({
+          date: d,
+          hijri: info.hijri,
+          weekday: window.Hijri.weekdayName(d),
+          inDays: i,
+        });
+      }
+    }
+
+    var whenText = function (n) {
+      if (n === 0) return 'اليوم';
+      if (n === 1) return 'غدًا';
+      return 'بعد ' + arabicNum(n) + ' يومًا';
+    };
+
+    var html = '<div class="card-title">' + Icons.icon('moonStar') +
+      'أيام الصيام القادمة</div>';
+
+    // قسم أيام البيض
+    if (whiteUpcoming.length) {
+      html += '<div class="fast-section">أيام البيض (١٣ · ١٤ · ١٥)</div>';
+      html += whiteUpcoming.map(function (u) {
+        return '<div class="fast-row">' +
+          '<span class="badge badge-gold" style="min-width:78px;justify-content:center">' +
+            esc(whenText(u.inDays)) + '</span>' +
+          '<span class="fast-main">' + esc(u.weekday) + ' · ' +
+            arabicNum(u.hijri.day) + ' ' + esc(u.hijri.monthName) + '</span>' +
+          '<span class="ref-line">' + arabicNum(u.date.getDate()) + '/' +
+            arabicNum(u.date.getMonth() + 1) + '</span>' +
+        '</div>';
+      }).join('');
+    }
+
+    // قسم الإثنين والخميس
+    if (weekly.length) {
+      html += '<div class="fast-section" style="margin-top:12px">الإثنين والخميس</div>';
+      html += weekly.map(function (u) {
+        var why = u.reasons.map(function (r) {
+          if (r.key === 'monday') return 'الإثنين';
+          if (r.key === 'thursday') return 'الخميس';
+          if (r.key === 'ramadan') return 'رَمَضان';
+          return r.titleAr;
+        }).join(' + ');
+        return '<div class="fast-row">' +
+          '<span class="badge" style="min-width:78px;justify-content:center">' +
+            esc(whenText(u.inDays)) + '</span>' +
+          '<span class="fast-main">' + esc(u.weekday) + ' · ' +
+            arabicNum(u.hijri.day) + ' ' + esc(u.hijri.monthName) + '</span>' +
+          '<span class="ref-line">' + esc(why) + '</span>' +
+        '</div>';
+      }).join('');
+    }
+
+    // رمضان
+    var ram = window.Hijri.ramadanStatus(now);
+    if (ram && !ram.inRamadan && ram.daysUntilRamadan > 0 && ram.daysUntilRamadan <= 40) {
+      html += '<div class="notice" style="margin-top:12px">' + Icons.icon('moonStar') +
+        '<div>باقي ' + arabicNum(ram.daysUntilRamadan) + ' يومًا على شَهْر رَمَضان (' +
+        arabicNum(ram.startDate.getDate()) + '/' + arabicNum(ram.startDate.getMonth() + 1) +
+        ' بإذن الله).</div></div>';
+    }
+
+    html += '<div class="ref-line" style="margin-top:12px">أيام البيض: ١٣ و١٤ و١٥ من كل شهر هجري. ' +
+      'الإثنين والخميس أسبوعيًا. التاريخ بتقويم أم القرى.</div>';
+
+    var card = el('div', 'card');
+    card.innerHTML = html;
+    return card;
+  }
+
   function streakCard() {
     var st = Store.get();
     var days = Object.keys(st.wird.completedDays || {}).length;
@@ -270,8 +414,15 @@
 
     var wrap = el('div', 'screen is-active');
     wrap.appendChild(el('h1', 'screen-title', greeting));
-    wrap.appendChild(el('p', 'screen-sub',
-      AR_DAYS[now.getDay()] + ' · ' + arabicNum(now.getDate()) + ' / ' + arabicNum(now.getMonth() + 1)));
+
+    // التاريخ الميلادي والهجري
+    var dateLine = AR_DAYS[now.getDay()] + ' · ' + arabicNum(now.getDate()) +
+      ' / ' + arabicNum(now.getMonth() + 1) + ' / ' + arabicNum(now.getFullYear());
+    wrap.appendChild(el('p', 'screen-sub', dateLine));
+
+    // بطاقة التاريخ الهجري + حالة اليوم
+    var hijriCard = hijriTodayCard(now);
+    if (hijriCard) wrap.appendChild(hijriCard);
 
     if (App.installPrompt) {
       var ib = el('div', 'install-bar',
@@ -328,6 +479,10 @@
     }
 
     wrap.appendChild(streakCard());
+
+    // تذكير الصيام
+    var fastCard = fastingUpcomingCard(now);
+    if (fastCard) wrap.appendChild(fastCard);
 
     var quick = el('div', 'grid-auto');
     [

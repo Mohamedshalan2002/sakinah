@@ -44,6 +44,10 @@ python -m http.server 8731 --bind 127.0.0.1
 
 ### المزايا في نسخة الويب
 
+- **التاريخ الهجري** بتقويم أم القرى الرسمي (بلا إنترنت، بلا تقريب حسابي).
+- **تذكير بالصيام**: أيام البيض (١٣ · ١٤ · ١٥ من كل شهر هجري) والإثنين والخميس،
+  مع جدول الأيام القادمة والتنبيه المسبق مساء اليوم السابق.
+- **المناسبات الإسلامية**: رمضان، العيدان، عرفة، عاشوراء… محسوبة من التقويم نفسه.
 - مصحف كامل: ١١٤ سورة، تصفح، بحث في النص، علامات، متابعة آخر موضع، تكرار آية للتحفيظ، ختمة.
 - أذكار: ٢٦٧ ذكرًا في ١٣ تصنيفًا، عدّاد لكل ذكر، **مرجع كل ذكر معروض**.
 - أدعية حسب الحالة (١٠ حالات: همّ، قلق، سفر، مرض، ذنب…).
@@ -103,6 +107,9 @@ flutter run --release
 # القرآن: بناء + تحقق بمصدرين مستقلّين
 python data/scripts/build_quran.py
 
+# التقويم الهجري (جدول أم القرى المضمّط)
+python data/scripts/build_hijri.py
+
 # الأذكار: بناء + فحص سلامة + دمج الفضل
 python data/scripts/build_azkar.py
 
@@ -126,7 +133,14 @@ python data/scripts/make_icons.py
 python data/scripts/tests/gen_js_cases.py
 node data/scripts/tests/test_prayer_js.js
 
-# اختبار تكامل تطبيق الويب في بيئة DOM (٤٦ فحصًا)
+# التقويم الهجري: JS مقابل تقويم أم القرى (١٠٠ + ١٢٥ حالة)
+python data/scripts/tests/gen_hijri_cases.py
+node data/scripts/tests/test_hijri.js
+
+# تذكير الصيام (١٢ فحصًا)
+node data/scripts/tests/test_fasting_reminder.js
+
+# اختبار تكامل تطبيق الويب في بيئة DOM (٥٨ فحصًا)
 cd data/scripts/tests
 npm install jsdom
 node test_integration.js
@@ -139,11 +153,13 @@ node test_integration.js
 | المجال | النتيجة |
 |---|---|
 | نص القرآن | ١١٤ سورة / ٦٢٣٦ آية — **صفر اختلاف** في الحروف والحركات بين مصدرين مستقلّين |
+| **التاريخ الهجري** | **١٠٠/١٠٠** تحويل ميلادي→هجري، **١٢٥/١٢٥** عكسي، **٣٦٠/٣٦٠** ذهاب وعودة، مطابق لتقويم أم القرى |
+| **تذكير الصيام** | **١٢/١٢** اختبار (رصد الوزن والإعدادات والتنبيه) |
 | مواقيت الصلاة | **٥٢٨/٥٢٨** اختبار في الطرق القياسية داخل ٣ دقائق من مرجع مستقل |
 | محرك المواقيت (JS) | **٣٨٤/٣٨٤** حالة مطابقة تمامًا لمحرك Python |
 | القبلة | مطابقة تامة (`فرق 0.0000°`) |
 | بيانات الأذكار | ٢٦٧ ذكرًا — كل الفحوصات نجحت |
-| تطبيق الويب | **٤٦/٤٦** اختبار تكامل ناجح |
+| تطبيق الويب | **٥٨/٥٨** اختبار تكامل ناجح |
 
 التفاصيل الكاملة بالأرقام وبما **لم** يُختبر: `VERIFICATION.md`.
 
@@ -190,6 +206,7 @@ azkar/
 │   ├── scripts/             سكربتات التوليد والتحقق
 │   │   ├── build_quran.py
 │   │   ├── build_azkar.py
+│   │   ├── build_hijri.py
 │   │   ├── build_names_duas.py
 │   │   ├── prayer_engine.py
 │   │   ├── verify_prayer.py
@@ -205,7 +222,7 @@ azkar/
 │   ├── manifest.webmanifest
 │   ├── sw.js                عامل الخدمة (أوفلاين)
 │   ├── css/app.css
-│   ├── js/                  store · icons · prayer · core · quran · azkar · rituals · screens · boot
+│   ├── js/                  store · icons · prayer · hijri · core · quran · azkar · rituals · screens · boot
 │   ├── data/                البيانات (نسخة للويب)
 │   └── assets/fonts, icons
 ├── flutter_app/             مشروع Flutter

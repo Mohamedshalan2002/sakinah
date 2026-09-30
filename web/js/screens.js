@@ -269,6 +269,15 @@
       '<label style="display:flex;align-items:center;gap:10px;margin-bottom:14px;cursor:pointer">' +
         '<input type="checkbox" id="n-pm" ' + (n.azkarEvening ? 'checked' : '') +
         ' style="width:18px;height:18px"><span>تذكير أذكار المساء</span></label>' +
+      '<div class="ornament-divider" style="margin:16px 0">' + Icons.star8(24) + '</div>' +
+      '<div class="ref-line" style="margin-bottom:10px">تذكير الصيام</div>' +
+      '<label style="display:flex;align-items:center;gap:10px;margin-bottom:14px;cursor:pointer">' +
+        '<input type="checkbox" id="n-fwhite" ' + (n.fastingWhiteDays ? 'checked' : '') +
+        ' style="width:18px;height:18px"><span>تنبيه بصيام أيام البيض (١٣ · ١٤ · ١٥)</span></label>' +
+      '<label style="display:flex;align-items:center;gap:10px;margin-bottom:14px;cursor:pointer">' +
+        '<input type="checkbox" id="n-fmth" ' + (n.fastingMondayThursday ? 'checked' : '') +
+        ' style="width:18px;height:18px"><span>تنبيه بصيام الإثنين والخميس</span></label>' +
+      '<div class="ref-line" style="margin-bottom:14px">يُرسل التنبيه مساء اليوم السابق حتى تستعد للصيام.</div>' +
       '<button class="btn btn-primary btn-block" id="n-ask">السماح بإشعارات النظام</button>',
       function (panel) {
         function save() {
@@ -278,12 +287,14 @@
               azan: panel.querySelector('#n-azan').checked,
               azkarMorning: panel.querySelector('#n-am').checked,
               azkarEvening: panel.querySelector('#n-pm').checked,
+              fastingWhiteDays: panel.querySelector('#n-fwhite').checked,
+              fastingMondayThursday: panel.querySelector('#n-fmth').checked,
             },
           });
           C.updateNotifBtn();
           scheduleNotifications();
         }
-        ['#n-enabled', '#n-azan', '#n-am', '#n-pm'].forEach(function (s) {
+        ['#n-enabled', '#n-azan', '#n-am', '#n-pm', '#n-fwhite', '#n-fmth'].forEach(function (s) {
           panel.querySelector(s).addEventListener('change', save);
         });
         panel.querySelector('#n-ask').addEventListener('click', function () {
@@ -338,6 +349,33 @@
     }
     if (st.notifications.azkarEvening && hhmm === st.notifications.azkarEveningTime) {
       fire('azkar-pm', 'أذكار المساء', 'اختم يومك بالذكر');
+    }
+
+    // ── تذكير الصيام: يُرسل مساء اليوم السابق حتى يستعد المستخدم ──
+    if ((st.notifications.fastingWhiteDays || st.notifications.fastingMondayThursday) &&
+        window.Hijri && window.Hijri._state.loaded) {
+      var targetHour = st.notifications.fastingReminderHour || 20;
+      var nowHour = now.getHours();
+      if (nowHour === targetHour) {
+        // نفحص يوم الغد (لأن التذكير مساءً لصيام الغد)
+        var tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        var info = window.Hijri.fastingInfo(tomorrow);
+        if (info && info.isFastingDay) {
+          var wantWhite = st.notifications.fastingWhiteDays &&
+            info.reasons.some(function (r) { return r.key === 'white'; });
+          var wantWeekly = st.notifications.fastingMondayThursday &&
+            info.reasons.some(function (r) { return r.key === 'monday' || r.key === 'thursday'; });
+          var wantRamadan = st.notifications.fastingWhiteDays &&
+            info.reasons.some(function (r) { return r.key === 'ramadan'; });
+
+          if (wantWhite || wantWeekly || wantRamadan) {
+            var why = info.reasons.map(function (r) { return r.titleAr; }).join(' و');
+            fire('fasting-' + window.Core.dayKey(tomorrow),
+              'تذكير صيام غدًا (' + info.weekday + ')',
+              why + ' — ' + info.hijri.day + ' ' + info.hijri.monthName);
+          }
+        }
+      }
     }
   }
 

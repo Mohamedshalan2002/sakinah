@@ -34,6 +34,10 @@
       azkarEvening: true,
       azkarMorningTime: '06:30',
       azkarEveningTime: '18:00',
+      // تذكيرات الصيام
+      fastingWhiteDays: true,     // تنبيه بصيام أيام البيض (١٣ و١٤ و١٥)
+      fastingMondayThursday: true, // تنبيه بصيام الإثنين والخميس
+      fastingReminderHour: 20,    // ساعة التنبيه المسبق (بعد صلاة العشاء عادةً)
       lastFired: '',
     },
     // الصوت (تنزيل عند الطلب من مصدر يحدده المستخدم — لا ملفات محمّلة)

@@ -25,6 +25,10 @@
       C.fetchJSON('data/names/names99.json').then(function (d) { App.names = d; }),
       C.fetchJSON('data/names/situations.json').then(function (d) { App.situations = d; }),
       C.fetchJSON('data/cities.json').then(function (d) { App.cities = d; }),
+      // التقويم الهجري (جدول أم القرى) — يعمل أوفلاين
+      window.Hijri
+        ? window.Hijri.load(C.fetchJSON).then(function (ok) { App.hijriReady = !!ok; })
+        : Promise.resolve(),
     ];
 
     Promise.all(jobs).then(function () {
