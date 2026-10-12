@@ -92,6 +92,8 @@
     soul: '<svg viewBox="0 0 24 24" ' + S + '><path d="M12 3c1.6 2.2 3 4 3 5.8A3 3 0 0 1 12 12a3 3 0 0 1-3-3.2C9 7 10.4 5.2 12 3z"/><path d="M8 13.5h8M9 20h6"/><path d="M12 13.5V17"/></svg>',
     calendarHeart: '<svg viewBox="0 0 24 24" ' + S + '><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M12 18.6s-2.6-1.6-2.6-3.4a1.3 1.3 0 0 1 2.6-.6 1.3 1.3 0 0 1 2.6.6c0 1.8-2.6 3.4-2.6 3.4z"/></svg>',
     moonStar: '<svg viewBox="0 0 24 24" ' + S + '><path d="M19 13.5A7.5 7.5 0 0 1 9.5 4a7.5 7.5 0 1 0 9.5 9.5z"/><path d="M17.5 3.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>',
+    starFilled: '<svg viewBox="0 0 24 24" stroke="currentColor" fill="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M12 3.8l2.6 5.4 5.9.8-4.3 4.1 1.1 5.9-5.3-2.9-5.3 2.9 1.1-5.9L3.5 10l5.9-.8z"/></svg>',
+    searchAll: '<svg viewBox="0 0 24 24" ' + S + '><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l4.5 4.5"/><path d="M8 10.5h5M10.5 8v5"/></svg>',
   };
 
   function icon(name, sizeClass) {

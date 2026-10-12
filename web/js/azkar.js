@@ -148,6 +148,7 @@
 
     var card = el('div', 'zekr-card');
     card.setAttribute('data-zekr', e.id);
+    var faved = window.More && window.More.isFavorite('zekr', e.id);
     card.innerHTML =
       '<div class="zekr-text">' + esc(e.text) + '</div>' +
       (e.fadlAr ? '<div class="ref-line" style="border-inline-start:3px solid var(--gold-700);padding-inline-start:10px">' +
@@ -159,6 +160,8 @@
           : (e.refStatus === 'quran-partial'
             ? '<span class="badge badge-verified">' + Icons.icon('checkCircle') + 'نص قرآني (تغطية جزئية)</span>'
             : '<span class="badge badge-review">' + Icons.icon('info') + 'يحتاج مراجعة تخريج</span>')) +
+        '<button class="fav-btn' + (faved ? ' is-on' : '') + '" data-fav="1" aria-label="المفضلة">' +
+          Icons.icon(faved ? 'starFilled' : 'star') + '</button>' +
         '<div class="counter">' +
           '<span class="counter-value">' + arabicNum(count) + ' / ' + arabicNum(e.repeat) + '</span>' +
           '<button class="counter-btn' + (done ? ' is-done' : '') + '" data-inc="1" aria-label="عدّ">' +
@@ -168,6 +171,11 @@
       '</div>' +
       '<div class="ref-line"><strong>المرجع:</strong> ' + esc(e.refWork || '') + ' — ' + esc(e.ref) + '</div>';
 
+    card.querySelector('[data-fav]').addEventListener('click', function (ev) {
+      ev.stopPropagation();
+      if (window.More) window.More.toggleFavorite('zekr', e.id);
+      C.render();
+    });
     card.querySelector('[data-inc]').addEventListener('click', function () {
       var st = Store.get();
       var p = st.zekrProgress[e.id] || { count: 0, day: '' };
@@ -262,11 +270,28 @@
 
     var grid = el('div', 'names-grid');
     App.names.names.forEach(function (n) {
-      var t = el('button', 'name-tile',
+      var faved = window.More && window.More.isFavorite('name', n.id);
+      // نستخدم div لا button لأن بداخله زر مفضلة (زر داخل زر غير صالح في HTML)
+      var t = el('div', 'name-tile',
         '<span class="n-idx">' + arabicNum(n.id) + '</span>' +
         '<span class="n-name">' + esc(n.name) + '</span>' +
-        '<span class="n-brief">' + esc(n.brief) + '</span>');
+        '<span class="n-brief">' + esc(n.brief) + '</span>' +
+        '<button class="fav-btn name-fav' + (faved ? ' is-on' : '') + '" data-fav="' + n.id + '" aria-label="المفضلة">' +
+          Icons.icon(faved ? 'starFilled' : 'star') + '</button>');
+      t.setAttribute('role', 'button');
+      t.setAttribute('tabindex', '0');
+      t.querySelector('[data-fav]').addEventListener('click', function (ev) {
+        ev.stopPropagation();
+        if (window.More) window.More.toggleFavorite('name', n.id);
+        C.render();
+      });
       t.addEventListener('click', function () { openNameDetail(n); });
+      t.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Enter' || ev.key === ' ') {
+          ev.preventDefault();
+          openNameDetail(n);
+        }
+      });
       grid.appendChild(t);
     });
     wrap.appendChild(grid);
@@ -326,6 +351,7 @@
   window.Azkar = {
     renderAzkar: renderAzkar, renderSituations: renderSituations,
     renderNames: renderNames, openSituation: openSituation,
+    openNameDetail: openNameDetail,
   };
   App.screens.azkar = renderAzkar;
   App.screens.situations = renderSituations;

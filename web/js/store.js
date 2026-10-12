@@ -13,6 +13,12 @@
     lastRead: { surah: 1, verse: 1, at: 0 },
     // مواضع محفوظة (فهرس)
     bookmarks: [],
+    // المفضلة: أذكار وأدعية وأسماء يحفظها المستخدم
+    favorites: [],
+    // سجل الصيام: { 'YYYY-MM-DD': { reasons: ['white','monday'] } }
+    fastingLog: {},
+    // ذكر اليوم (يُختار بنفس اليوم ليكون ثابتًا)
+    dailyZekr: { day: '', id: '' },
     // ختمة
     khatmah: { startDate: '', page: 1, targetPages: 604 },
     // الأذكار: عدّاد كل ذكر + آخر يوم

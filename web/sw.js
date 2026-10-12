@@ -23,6 +23,7 @@ const SHELL_ASSETS = [
   'js/quran.js',
   'js/azkar.js',
   'js/rituals.js',
+  'js/more.js',
   'js/screens.js',
   'js/boot.js',
 ];

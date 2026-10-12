@@ -74,7 +74,7 @@ async function main() {
   // ── تحميل سكربتات التطبيق بالترتيب نفسه المذكور في index.html ──
   const scripts = [
     'js/store.js', 'js/icons.js', 'js/prayer.js', 'js/hijri.js', 'js/core.js',
-    'js/quran.js', 'js/azkar.js', 'js/rituals.js', 'js/screens.js', 'js/boot.js',
+    'js/quran.js', 'js/azkar.js', 'js/rituals.js', 'js/more.js', 'js/screens.js', 'js/boot.js',
   ];
 
   const results = [];
@@ -339,7 +339,62 @@ async function main() {
     !/https?:\/\/(?!127\.0\.0\.1|localhost)/.test(swCode.replace(/^\s*\*.*$/gm, '')),
     'لا طلبات خارجية');
 
-  // ── 15) لا تتبّع/إعلانات في الواجهة ──
+  // ── 15) سجل الصيام ──
+  try {
+    const h1 = new Date(2026, 9, 12);
+    const before = Object.keys(Store.get().fastingLog || {}).length;
+    win.More.logFasting(h1, win.Hijri.fastingInfo(h1));
+    const after = Object.keys(Store.get().fastingLog || {}).length;
+    check('تسجيل الصيام يعمل', after === before + 1, `${before} -> ${after}`);
+    win.More.logFasting(h1, win.Hijri.fastingInfo(h1));
+    const back = Object.keys(Store.get().fastingLog || {}).length;
+    check('إلغاء تسجيل الصيام يعمل', back === before, `${after} -> ${back}`);
+  } catch (e) {
+    check('سجل الصيام', false, e.message);
+  }
+
+  // ── 16) المفضلة ──
+  try {
+    const zid = App.azkar.entries[0].id;
+    const wasFav = win.More.isFavorite('zekr', zid);
+    win.More.toggleFavorite('zekr', zid);
+    check('إضافة للمفضلة تعمل', win.More.isFavorite('zekr', zid) !== wasFav,
+      'قبل=' + wasFav + ' بعد=' + win.More.isFavorite('zekr', zid));
+    win.More.toggleFavorite('zekr', zid);
+    check('إزالة من المفضلة تعمل', win.More.isFavorite('zekr', zid) === wasFav, 'رجع للأصل');
+  } catch (e) {
+    check('المفضلة', false, e.message);
+  }
+
+  // ── 17) شاشات «المزيد» ترسم وتعمل ──
+  for (const s of ['more', 'search', 'favorites', 'hijri', 'fastingLog']) {
+    try {
+      win.Core.navigate(s, {}, false);
+      await new Promise((r) => setTimeout(r, 90));
+      const h = $('#main').innerHTML;
+      check('شاشة "' + s + '" ترسم', h.length > 150, h.length + ' محرفًا');
+    } catch (e) {
+      check('شاشة "' + s + '" ترسم', false, e.message);
+    }
+  }
+
+  // ── 18) التقويم الهجري: الشبكة تُرسم بخلايا صحيحة ──
+  try {
+    win.Core.navigate('hijri', {}, false);
+    await new Promise((r) => setTimeout(r, 150));
+    const cells = $('#main').querySelectorAll('.hijri-cell[data-day]');
+    const nowH = win.Hijri.toHijri(new Date());
+    const expect = win.Hijri.daysInHijriMonth(nowH.year, nowH.month);
+    check('شبكة التقويم تعرض أيام الشهر كلها', cells.length === expect,
+      cells.length + ' خلية (متوقع ' + expect + ')');
+    check('أيام البيض معلّمة في الشبكة',
+      $('#main').querySelectorAll('.hijri-cell.is-white').length === 3,
+      $('#main').querySelectorAll('.hijri-cell.is-white').length + ' خلية بيض');
+  } catch (e) {
+    check('شبكة التقويم', false, e.message);
+  }
+
+  // ── 19) لا تتبّع/إعلانات في الواجهة ──
   const htmlAll = [...doc.querySelectorAll('script[src]')].map((s) => s.getAttribute('src')).join(' ');
   check('لا سكربتات خارجية', !/https?:\/\//.test(htmlAll), htmlAll || 'كل السكربتات محلية');
   const cssCode = fs.readFileSync(path.join(WEB, 'css', 'app.css'), 'utf8');

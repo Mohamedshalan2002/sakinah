@@ -87,9 +87,9 @@
     var navItems = [
       { id: 'quran', label: 'المصحف', icon: 'quran' },
       { id: 'azkar', label: 'الأذكار', icon: 'list' },
-      { id: 'tasbih', label: 'السبحة', icon: 'beads' },
       { id: 'prayer', label: 'المواقيت', icon: 'compass' },
       { id: 'wird', label: 'الوِرد', icon: 'fire' },
+      { id: 'more', label: 'المزيد', icon: 'list' },
     ];
 
     $('#app').innerHTML =
