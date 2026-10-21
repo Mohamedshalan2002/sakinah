@@ -57,6 +57,14 @@
 
     wrap.appendChild(khatmahCard());
 
+    // دعاء ختم القرآن
+    var duaCard = el('div', 'card');
+    duaCard.innerHTML =
+      '<div class="card-title">' + Icons.icon('sparkle') + 'دعاء ختم القرآن</div>' +
+      '<div class="zekr-text" style="font-size:1.05rem;line-height:2">اللَّهُمَّ ارْحَمْنِي بِالْقُرْآنِ، وَاجْعَلْهُ لِي إِمَامًا وَنُورًا وَهُدًى وَرَحْمَةً. اللَّهُمَّ ذَكِّرْنِي مِنْهُ مَا نَسِيتُ، وَعَلِّمْنِي مِنْهُ مَا جَهِلْتُ، وَارْزُقْنِي تِلَاوَتَهُ آنَاءَ اللَّيْلِ وَأَطْرَافَ النَّهَارِ، وَاجْعَلْهُ لِي حُجَّةً يَا رَبَّ الْعَالَمِينَ.</div>' +
+      '<div class="ref-line"><strong>المرجع:</strong> دعاء ختم القرآن — منقول عن السلف (أذكار الصباح والمساء).</div>';
+    wrap.appendChild(duaCard);
+
     var searchCard = el('div', 'card');
     searchCard.innerHTML =
       '<div class="card-title">' + Icons.icon('search') + 'ابحث في المصحف</div>' +
@@ -70,6 +78,11 @@
     listCard.innerHTML = '<div class="card-title">' + Icons.icon('list') + 'السور — ' + arabicNum(114) + '</div>' +
       '<div id="surah-list" class="surah-list"></div>';
     wrap.appendChild(listCard);
+
+    var juzCard = el('div', 'card');
+    juzCard.innerHTML = '<div class="card-title">' + Icons.icon('book') + 'الأجزاء — ' + arabicNum(30) + '</div>' +
+      '<div id="juz-list" class="chip-row" style="flex-wrap:wrap;overflow:visible"></div>';
+    wrap.appendChild(juzCard);
 
     // العلامات المحفوظة
     var bm = (st.bookmarks || []);
@@ -94,6 +107,35 @@
       item.addEventListener('click', function () { C.navigate('surah', { surah: s.number }); });
       list.appendChild(item);
     });
+
+    // قائمة الأجزاء
+    var juzList = wrap.querySelector('#juz-list');
+    if (juzList) {
+      // compute first verse per juz from cached? load lazily
+      var juzFirst = {};
+      var done = 0;
+      for (var ji = 1; ji <= 114; ji++) {
+        (function (n) {
+          C.fetchJSON('data/quran/surah/' + n + '.json').then(function (d) {
+            d.verses.forEach(function (v) {
+              if (juzFirst[v.juz] === undefined) juzFirst[v.juz] = { surah: d.surah, verse: v.v };
+            });
+            done++;
+            if (done === 114) {
+              for (var j = 1; j <= 30; j++) {
+                var info = juzFirst[j];
+                if (!info) return;
+                var b = el('button', 'chip', 'الجزء ' + arabicNum(j));
+                b.addEventListener('click', function (x) {
+                  return function () { C.navigate('surah', { surah: x.surah, verse: x.verse }); };
+                }(info));
+                juzList.appendChild(b);
+              }
+            }
+          });
+        })(ji);
+      }
+    }
 
     // العلامات
     var bmList = wrap.querySelector('#bm-list');

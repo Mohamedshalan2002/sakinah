@@ -148,13 +148,14 @@
 
     var card = el('div', 'zekr-card');
     card.setAttribute('data-zekr', e.id);
+    card.style.cursor = 'pointer';
     var faved = window.More && window.More.isFavorite('zekr', e.id);
     card.innerHTML =
       '<div class="zekr-text">' + esc(e.text) + '</div>' +
       (e.fadlAr ? '<div class="ref-line" style="border-inline-start:3px solid var(--gold-700);padding-inline-start:10px">' +
         '<strong>الفضل:</strong> ' + esc(e.fadlAr) + '</div>' : '') +
       '<div class="zekr-foot">' +
-        '<span class="badge badge-gold">' + Icons.icon('repeat') + arabicNum(e.repeat) + '×</span>' +
+        '<span class="badge badge-gold">' + Icons.icon('repeat') + 'تكرار</span>' +
         (e.refStatus === 'verified-quran'
           ? '<span class="badge badge-verified">' + Icons.icon('checkCircle') + 'نص قرآني متحقّق</span>'
           : (e.refStatus === 'quran-partial'
@@ -176,7 +177,23 @@
       if (window.More) window.More.toggleFavorite('zekr', e.id);
       C.render();
     });
-    card.querySelector('[data-inc]').addEventListener('click', function () {
+    card.addEventListener('click', function (ev) {
+      if (ev.target.closest('[data-fav]')) return;
+      var st = Store.get();
+      var p = st.zekrProgress[e.id] || { count: 0, day: '' };
+      var c = p.day === today ? p.count : 0;
+      c = c >= e.repeat ? 0 : c + 1;
+      var patch = {};
+      patch[e.id] = { count: c, day: today };
+      Store.set({ zekrProgress: patch });
+      if (c >= e.repeat) {
+        C.vibrate([25, 50, 25]);
+        markZekrDone(e.id);
+      }
+      C.render();
+    });
+    var _inc = card.querySelector('[data-inc]');
+    if (_inc) _inc.addEventListener('click', function (ev) { ev.stopPropagation();
       var st = Store.get();
       var p = st.zekrProgress[e.id] || { count: 0, day: '' };
       var c = p.day === today ? p.count : 0;
